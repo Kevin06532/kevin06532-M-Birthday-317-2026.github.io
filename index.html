@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>妈妈和姨妈的生日祝福</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            height: 100vh;
+            background: #fff5f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .petal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .petal {
+            position: absolute;
+            top: -20px;
+            width: 15px;
+            height: 15px;
+            background: #ffccd5;
+            border-radius: 50% 0 50% 50%;
+            opacity: 0.8;
+            animation: petalFall linear forwards;
+        }
+        .countdown {
+            font-size: 150px;
+            font-weight: bold;
+            color: #ffd700;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #count3 { animation: showNum 1s 0.5s forwards; }
+        #count2 { animation: showNum 1s 1.5s forwards; }
+        #count1 { animation: showNum 1s 2.5s forwards; }
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            border-radius: 50%;
+            opacity: 0.9;
+            animation: float 10s linear forwards;
+            z-index: 2;
+        }
+        .cake-container {
+            position: relative;
+            width: 240px;
+            height: 220px;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: showElem 1s 3.8s forwards, cakeSway 3s infinite ease-in-out;
+            z-index: 2;
+        }
+        /* 动态蛋糕样式 */
+        .cake {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .cake-layer {
+            position: absolute;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #d63384 0%, #ff6b6b 100%);
+            box-shadow: 0 4px 0 rgba(180,30,90,0.3);
+        }
+        .layer1 {
+            width: 240px;
+            height: 60px;
+            bottom: 0;
+            left: 0;
+        }
+        .layer2 {
+            width: 200px;
+            height: 50px;
+            bottom: 50px;
+            left: 20px;
+        }
+        .layer3 {
+            width: 160px;
+            height: 40px;
+            bottom: 90px;
+            left: 40px;
+        }
+        .cream {
+            position: absolute;
+            border-radius: 8px 8px 0 0;
+            background: linear-gradient(135deg, #ffccd5 0%, #ff8fa3 100%);
+            animation: creamBounce 2s infinite ease-in-out;
+        }
+        .cream1 {
+            width: 250px;
+            height: 20px;
+            bottom: 60px;
+            left: -5px;
+        }
+        .cream2 {
+            width: 210px;
+            height: 18px;
+            bottom: 100px;
+            left: 15px;
+            animation-delay: 0.5s;
+        }
+        .cream3 {
+            width: 170px;
+            height: 16px;
+            bottom: 130px;
+            left: 35px;
+            animation-delay: 1s;
+        }
+        .cherry {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, #ff4d4d 0%, #d63384 100%);
+            border-radius: 50%;
+            bottom: 130px;
+            animation: cherryWobble 2s infinite ease-in-out;
+        }
+        .cherry1 { left: 60px; }
+        .cherry2 { left: 100px; animation-delay: 0.7s; }
+        .cherry3 { left: 140px; animation-delay: 1.4s; }
+        .cherry4 { left: 180px; animation-delay: 0.3s; }
+        .candle {
+            position: absolute;
+            bottom: 146px;
+            width: 12px;
+            height: 40px;
+            background: linear-gradient(180deg, #ff4d4d 0%, #d63384 100%);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            animation: candleShake 3s infinite ease-in-out;
+        }
+        .candle1 { left: 35%; }
+        .candle2 { left: 45%; animation-delay: 0.5s; }
+        .candle3 { left: 55%; animation-delay: 1s; }
+        .candle4 { left: 65%; animation-delay: 1.5s; }
+        .flame {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 20px;
+            background: linear-gradient(to bottom, #ffeb3b, #ff9800);
+            border-radius: 50% 50% 20% 20%;
+            animation: flameFlicker 0.8s infinite alternate;
+            box-shadow: 0 0 10px rgba(255,152,0,0.5);
+        }
+        .wish {
+            font-size: 32px;
+            font-weight: bold;
+            padding: 20px 40px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(214,51,132,0.15);
+            opacity: 0;
+            text-align: center;
+            line-height: 1.6;
+            background-image: linear-gradient(90deg, #ff6b6b, #ff8fa3, #d63384, #ffaa71, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 100%;
+            animation: textGradient 5s infinite linear, showElem 1s 3.8s forwards;
+            z-index: 2;
+        }
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #d63384;
+            color: #fff;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(214,51,132,0.3);
+        }
+        /* 新增蛋糕相关动画 */
+        @keyframes cakeSway {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1deg); }
+        }
+        @keyframes creamBounce {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.1); }
+        }
+        @keyframes cherryWobble {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-5deg); }
+        }
+        /* 原有动画保留 */
+        @keyframes petalFall {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateX(calc(-50px + 100px * var(--random-x))) translateY(120vh) rotate(360deg); opacity: 0; }
+        }
+        @keyframes candleShake {
+            0%, 100% { transform: rotate(1deg); }
+            50% { transform: rotate(-1deg); }
+        }
+        @keyframes flameFlicker {
+            0% { transform: translateX(-50%) scale(1, 1); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1.1, 1.2); opacity: 1; }
+        }
+        @keyframes showNum {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-120vh) rotate(360deg); }
+        }
+        @keyframes showElem {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes textGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="petal-container" id="petalContainer"></div>
+    <audio id="bgm" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-birthday-whistle-1842.mp3" type="audio/mpeg">
+    </audio>
+    <button class="music-btn" onclick="toggleMusic()">▶</button>
+    <div class="countdown" id="count3">3</div>
+    <div class="countdown" id="count2">2</div>
+    <div class="countdown" id="count1">1</div>
+    
+    <div class="cake-container">
+        <!-- 动态CSS蛋糕（替换原img标签） -->
+        <div class="cake">
+            <div class="cake-layer layer1"></div>
+            <div class="cake-layer layer2"></div>
+            <div class="cake-layer layer3"></div>
+            <div class="cream cream1"></div>
+            <div class="cream cream2"></div>
+            <div class="cream cream3"></div>
+            <div class="cherry cherry1"></div>
+            <div class="cherry cherry2"></div>
+            <div class="cherry cherry3"></div>
+            <div class="cherry cherry4"></div>
+        </div>
+        <!-- 蜡烛保留原有 -->
+        <div class="candle candle1">
+            <div class="flame"></div>
+        </div>
+        <div class="candle candle2">
+            <div class="flame"></div>
+        </div>
+        <div class="candle candle3">
+            <div class="flame"></div>
+        </div>
+        <div class="candle candle4">
+            <div class="flame"></div>
+        </div>
+    </div>
+    <div class="wish">妈妈生日快乐！祝妈妈以后的日子开开心心,健健康康,平平安安,以后尽量不要生气,愿你的生活如阳光般明媚，如花朵般绚烂。每一天都充满欢笑和温馨，每一刻都洋溢着爱与幸福。我永远爱你😘！</div>
+    <script>
+        const bgm = document.getElementById('bgm');
+        let isPlay = false;
+        function toggleMusic() {
+            isPlay ? bgm.pause() : bgm.play();
+            document.querySelector('.music-btn').textContent = isPlay ? '▶' : '⏸';
+            isPlay = !isPlay;
+        }
+        setTimeout(() => {
+            createBalloons();
+            setInterval(createBalloons, 5000);
+            createPetals();
+            setInterval(createPetals, 1000);
+        }, 3500);
+        function createBalloons() {
+            const colors = ['#ff6b6b', '#ff8fa3', '#ffb3c1', '#ffd6e0', '#ffaa71', '#4ecdc4'];
+            const count = 8;
+            for (let i = 0; i < count; i++) {
+                const balloon = document.createElement('div');
+                const size = 60 + Math.random() * 40;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = 5 + Math.random() * 90;
+                const speed = 8 + Math.random() * 4;
+                balloon.className = 'balloon';
+                balloon.style.width = balloon.style.height = `${size}px`;
+                balloon.style.backgroundColor = color;
+                balloon.style.left = `${left}%`;
+                balloon.style.animationDuration = `${speed}s`;
+                document.body.appendChild(balloon);
+                setTimeout(() => balloon.remove(), speed * 1000);
+            }
+        }
+        function createPetals() {
+            const petalContainer = document.getElementById('petalContainer');
+            const count = 3;
+            for (let i = 0; i < count; i++) {
+                const petal = document.createElement('div');
+                const left = 5 + Math.random() * 90;
+                const speed = 8 + Math.random() * 4;
+                const randomX = Math.random() - 0.5;
+                petal.className = 'petal';
+                petal.style.left = `${left}%`;
+                petal.style.animationDuration = `${speed}s`;
+                petal.style.setProperty('--random-x', randomX);
+                petalContainer.appendChild(petal);
+                setTimeout(() => petal.remove(), speed * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
